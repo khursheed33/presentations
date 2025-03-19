@@ -238,11 +238,58 @@ print(response)
 
 ---
 
-## 🌟 **Why Graph RAG is Better**  
-- Faster retrieval  
-- Better contextual understanding  
-- Stronger relationship-based search  
-- Handles real-time data better  
+### **Comparison of SQL, NoSQL, and Graph DB**
+
+| Feature | SQL (Relational) | NoSQL (Document, Key-Value) | Graph DB |
+|---------|------------------|----------------------------|----------|
+| **Data Model** | Tables (rows & columns) | Documents, Key-Value, Wide-Column | Nodes (entities) and Edges (relationships) |
+| **Relationships** | JOINs (expensive) | Weak or indirect handling | Direct, native relationship handling |
+| **Scalability** | Vertical (limited) | Horizontal (high) | Horizontal (efficient) |
+| **Query Complexity** | Complex with joins | Fast for key-based lookups | Fast and efficient for relationship-based queries |
+| **Best For** | Structured data | Unstructured or semi-structured data | Highly connected data (e.g., social networks, knowledge graphs) |
+
+---
+
+### **Graph DB Structure**  
+- **Nodes** – Represent entities (e.g., user, product)  
+- **Edges** – Represent relationships between nodes (e.g., "LIKES", "FRIEND")  
+- **Properties** – Metadata on nodes and edges (e.g., `name`, `age`)  
+
+#### **Example (Neo4j)**
+1. **Create Nodes:**
+```cypher
+CREATE (a:Person {name: 'John'}) 
+CREATE (b:Person {name: 'Jane'})
+```
+
+2. **Create Relationship:**
+```cypher
+MATCH (a:Person {name: 'John'}), (b:Person {name: 'Jane'})
+CREATE (a)-[:FRIEND]->(b)
+```
+
+3. **Query Relationship:**
+```cypher
+MATCH (a:Person)-[:FRIEND]->(b:Person) 
+WHERE a.name = 'John'
+RETURN b.name
+```
+
+---
+
+### **Why Graph DB is Better for RAG**
+1. **Direct Relationship Handling**  
+   - Fast traversal of nodes and edges enables quick context gathering.  
+
+2. **Context Preservation**  
+   - Maintains semantic and structural relationships, improving retrieval quality.  
+
+3. **Faster Similarity Search**  
+   - Graph DBs support embeddings and vector search natively (e.g., Neo4j-genai).  
+
+4. **Comparison with Other Vectors**  
+   - **Pure vector search**: Retrieves based on numerical similarity but lacks context.  
+   - **Graph-based vector search**: Combines vector similarity + relationship context → More accurate and meaningful results.  
 
 ---
 
