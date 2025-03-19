@@ -1,4 +1,4 @@
-# 📊 **Graph RAG with Neo4j – Hands-on Training**  
+## 📊 **Graph RAG with Neo4j – Hands-on Training**  
 
 ---
 
@@ -9,6 +9,8 @@
 ✅ Explore how Graph RAG integrates with Neo4j for better retrieval and generation  
 ✅ Hands-on examples using Python, Neo4j, and OpenAI  
 ✅ Expand Graph RAG to handle multi-modal data (images, videos)  
+✅ Compare SQL, NoSQL, and Graph databases (why and when to use Graph DB)  
+✅ Understand tokenization and its role in text processing  
 
 ---
 
@@ -54,6 +56,7 @@ RAG is an AI framework that combines **information retrieval** and **language ge
 - Generated using models like **OpenAI, SentenceTransformers, HuggingFace**  
 
 **Example:**  
+👉 Converts text to numerical form for similarity search.  
 ```python
 from langchain.embeddings import OpenAIEmbeddings
 
@@ -90,6 +93,7 @@ Measures the angle between two vectors.
 \]
 
 **Example:**  
+👉 Measures how similar two texts are based on vector closeness.  
 ```python
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
@@ -107,15 +111,14 @@ print(similarity)  # Output: [[0.998]]
 - Splitting large text into smaller parts for better embedding and retrieval.  
 
 **Example:**  
-👉 "Neo4j is a graph database..." → `[Chunk 1]`, `[Chunk 2]`  
-
+👉 Breaking down text to improve search.  
 ```python
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 text = "Neo4j is a graph database that stores data as nodes and edges..."
 splitter = RecursiveCharacterTextSplitter(chunk_size=50, chunk_overlap=10)
 chunks = splitter.split_text(text)
-print(chunks)
+print(chunks)  # ['Neo4j is a graph database...', 'database that stores...']
 ```
 
 ---
@@ -125,6 +128,7 @@ print(chunks)
 - Example: `"Neo4j is powerful"` → `["Neo4j", "is", "powerful"]`  
 
 **Example:**  
+👉 Breaks text into tokens for processing.  
 ```python
 from transformers import GPT2Tokenizer
 
@@ -135,19 +139,39 @@ print(tokens)  # Output: [6342, 318, 257, 20776, 5875, 13]
 
 ---
 
-## 📚 **3. How Graph RAG Works with Neo4j**  
+## 💾 **3. SQL vs NoSQL vs Graph DB**  
+
+| Type | Structure | Best Use Cases | Example |
+|-------|-----------|----------------|---------|
+| **SQL** | Tables (Rows & Columns) | Structured data, ACID compliance | MySQL, PostgreSQL |
+| **NoSQL** | Key-Value, Document, Column | Flexible schema, large-scale data | MongoDB, Redis |
+| **Graph DB** | Nodes & Edges | Complex relationships, relationship-first queries | Neo4j |
+
+---
+
+### ✅ **Why Graph DB Over SQL/NoSQL?**  
+- **Natural for Relationships** – Data with complex interconnections.  
+- **Fast Traversals** – Queries across connected nodes are faster.  
+- **Flexibility** – Schema-less structure handles dynamic data.  
+
+**Example:**  
+- SQL:  
+👉 `"Find all friends of John"` – Needs multiple JOINs (slow).  
+- Graph DB:  
+👉 `"MATCH (John)-[:FRIEND]->(friends) RETURN friends"` – Direct relationship (fast).  
+
+---
+
+## 📚 **4. How Graph RAG Works with Neo4j**  
 
 ### ✅ **Graph Structure in Neo4j**  
 - **Nodes** → Entities (documents, authors, keywords)  
 - **Relationships** → Contextual connections between nodes  
 
-### ✅ **Example Graph Structure:**  
-**Document** → `CONNECTED_TO` → **Keyword**  
-**Document** → `MENTIONS` → **Entity**  
-
 ---
 
 ### **Step 1: Setup Neo4j Connection**  
+👉 Connects Python to Neo4j.  
 ```python
 from neo4j import GraphDatabase
 
@@ -162,6 +186,7 @@ class GraphHandler:
 ---
 
 ### **Step 2: Insert Data into Neo4j**  
+👉 Stores embeddings as nodes in Neo4j.  
 ```python
 def create_node(tx, label, properties):
     query = f"CREATE (n:{label} {{ {', '.join(f'{k}: ${k}' for k in properties)} }})"
@@ -178,6 +203,7 @@ with handler.driver.session() as session:
 ---
 
 ### **Step 3: Perform Similarity Search**  
+👉 Retrieves similar nodes using cosine similarity.  
 ```python
 def search_similar_docs(tx, query_vector):
     query = """
@@ -197,6 +223,7 @@ with handler.driver.session() as session:
 ---
 
 ### **Step 4: Generate Response with LLM**  
+👉 Feeds retrieved data to LLM.  
 ```python
 from langchain.llms import OpenAI
 
@@ -208,45 +235,17 @@ print(response)
 
 ---
 
-## 🌟 **4. Why Graph RAG is Better**  
+## 🌟 **5. Why Graph RAG is Better**  
 | Problem | Solution in Graph RAG |
 |---------|-----------------------|
 | Context Length | Extends retrieval beyond token limits |
 | Data Relationships | Graph-based connections improve contextual relevance |
-| Domain Knowledge | Custom embeddings for specialized data |
 | Real-Time Knowledge | Fast retrieval of the latest information |
 
 ---
 
-## 🎯 **5. Multi-Modal Graph RAG**  
-
-### ✅ **Graph RAG for Images**  
-- Store image embeddings in Neo4j  
-- Use similarity search for retrieval  
-- Example: Search for a related product based on an image  
-
----
-
-### ✅ **Graph RAG for Videos**  
-- Store video embeddings (frame-based)  
-- Connect video segments using graph relationships  
-- Example: Find related tutorial videos  
-
----
-
-## 🚀 **6. Best Practices**  
-✅ Clean and pre-process data before embedding  
-✅ Use chunking to optimize search size  
-✅ Store embeddings in vector format  
-✅ Create meaningful relationships in Neo4j  
-
----
-
-## 🏁 **7. Summary**  
-- RAG = Retrieval + Augmentation + Generation  
-- Graph-based RAG improves context and relevance  
-- Neo4j enhances relationship-based retrieval  
-- Extend Graph RAG to multi-modal data  
+## 🎯 **6. Multi-Modal Graph RAG**  
+👉 Store embeddings for images/videos in Neo4j and search based on similarity.
 
 ---
 
